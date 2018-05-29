@@ -2,11 +2,12 @@ const
     glob         = require('glob'),
     protractor   = require.resolve('protractor'),
     node_modules = protractor.substring(0, protractor.lastIndexOf('node_modules') + 'node_modules'.length),
-    seleniumJar  = glob.sync(`${node_modules}/protractor/**/selenium-server-standalone-*.jar`).pop();
+    seleniumJar  = glob.sync(`${node_modules}/protractor/**/selenium-server-standalone-*.jar`).pop(),
+    crew         = require('serenity-js/lib/stage_crew');
 
 exports.config = {
 
-    baseUrl: 'http://todomvc.com',
+    baseUrl: 'http://todomvc.com/',
 
     seleniumServerJar: seleniumJar,
 
@@ -17,9 +18,18 @@ exports.config = {
 
     // https://github.com/protractor-cucumber-framework/protractor-cucumber-framework#uncaught-exceptions
     ignoreUncaughtExceptions: true,
-
+    // useAllAngular2AppRoots: true,
+    
     framework: 'custom',
-    frameworkPath: require.resolve('protractor-cucumber-framework'),
+    // frameworkPath: require.resolve('protractor-cucumber-framework'),
+    frameworkPath: require.resolve('serenity-js'),
+
+    serenity : {
+        crew: [
+            crew.serenityBDDReporter(),
+            crew.photographer()
+        ]
+    },
 
     specs: [ 'features/**/*.feature' ],
 
